@@ -23,15 +23,31 @@ function calculate() {
     const values = {};
 
     for (let field of fields) {
-        const val = getValue(field);
 
-        // ❌ error handling
-        if (typeof val === "object" && val.error) {
+        const input = document.getElementById(field);
+        const val = Number(input.value);
+
+        const max = Number(input.max);
+
+        // ❌ invalid / empty / negative
+        if (isNaN(val) || val < 0) {
             resultBox.style.display = "block";
             resultBox.innerHTML = `
                 <p style="color:red; font-weight:bold;">
                     ⚠️ Invalid input in: <strong>${field}</strong><br>
                     🚫 Negative numbers are not allowed.
+                </p>
+            `;
+            return;
+        }
+
+        // 🚫 exceeds HTML max
+        if (val > max) {
+            resultBox.style.display = "block";
+            resultBox.innerHTML = `
+                <p style="color:red; font-weight:bold;">
+                    ⚠️ Value too high in: <strong>${field}</strong><br>
+                    🚫 Maximum allowed is ${max}.
                 </p>
             `;
             return;
@@ -50,8 +66,7 @@ function calculate() {
     const mythicChests = Math.floor(totalPoints / 800);
     const remainingPoints = totalPoints % 800;
 
-    const pointsNeeded =
-        remainingPoints === 0 ? 0 : 800 - remainingPoints;
+    const pointsNeeded = remainingPoints === 0 ? 0 : 800 - remainingPoints;
 
     resultBox.style.display = "block";
     resultBox.innerHTML = `
@@ -61,6 +76,7 @@ function calculate() {
         <p>⭐ <strong>Points Needed for Next Mythic:</strong> ${pointsNeeded}</p>
     `;
 }
+
 
 function applyTheme(theme) {
     if (theme === "dark") {
