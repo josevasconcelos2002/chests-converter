@@ -61,3 +61,27 @@ function calculate() {
         <p>⭐ <strong>Points Needed for Next Mythic:</strong> ${pointsNeeded}</p>
     `;
 }
+
+function applyTheme(theme) {
+    if (theme === "dark") {
+        document.body.classList.add("dark");
+    } else {
+        document.body.classList.remove("dark");
+    }
+
+    const select = document.getElementById("themeSelect");
+    select.value = theme;
+}
+
+function changeTheme() {
+    const theme = document.getElementById("themeSelect").value;
+
+    applyTheme(theme);
+    localStorage.setItem("theme", theme);
+}
+
+// carregar tema ao abrir página
+window.onload = function () {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    applyTheme(savedTheme);
+};
