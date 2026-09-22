@@ -1,31 +1,103 @@
 const CYCLE_POINTS = 870;
 
+// Reward sequence for one complete 870-point cycle.
+// The number is the Chest Points required to obtain that reward.
+const REWARD_SEQUENCE = [
+    { type: "rare", cost: 10 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 10 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "legendary", cost: 60 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "epic", cost: 20 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "legendary", cost: 60 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "legendary", cost: 60 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "rare", cost: 10 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 20 },
+    { type: "rare", cost: 20 },
+    { type: "epic", cost: 20 },
+    { type: "rare", cost: 20 },
+    { type: "mythic", cost: 20 },
+    { type: "rare", cost: 10 }
+];
 
-// Rewards obtained from 1 complete cycle
-const CYCLE_REWARDS = {
-    common: 0,
-    rare: 40,
-    epic: 12,
-    legendary: 3,
-    mythic: 1
-};
-
-
-// Current cycle information
 let currentCycles = 0;
 
-
-// Global Mythic counter
 let totalMythicChests = 0;
 
-
-// Prevent counting the same calculation twice
 let cycleAlreadyCounted = false;
 
 
-/* =========================
-   CALCULATE
-========================= */
+// Calculate rewards obtained from the beginning
+// of the reward sequence using the remaining points.
+function calculateRemainingRewards(points) {
+
+    const rewards = {
+        common: 0,
+        rare: 0,
+        epic: 0,
+        legendary: 0,
+        mythic: 0
+    };
+
+    let pointsLeft = points;
+
+    for (const reward of REWARD_SEQUENCE) {
+
+        if (pointsLeft < reward.cost) {
+            break;
+        }
+
+        rewards[reward.type]++;
+        pointsLeft -= reward.cost;
+    }
+
+    return {
+        rewards: rewards,
+        pointsLeft: pointsLeft
+    };
+}
+
 
 function calculate() {
 
@@ -42,11 +114,6 @@ function calculate() {
 
     const values = {};
 
-
-    /* =========================
-       VALIDATE INPUTS
-    ========================= */
-
     for (let field of fields) {
 
         const input =
@@ -58,15 +125,12 @@ function calculate() {
         const max =
             Number(input.max);
 
-
-        // ❌ Invalid / negative
         if (isNaN(val) || val < 0) {
 
             resultBox.style.display = "block";
 
             resultBox.innerHTML = `
                 <h2>Results</h2>
-
                 <p style="color:red; font-weight:bold;">
                     ⚠️ Invalid input in:
                     <strong>${field}</strong>
@@ -78,15 +142,12 @@ function calculate() {
             return;
         }
 
-
-        // 🚫 Exceeds maximum
         if (val > max) {
 
             resultBox.style.display = "block";
 
             resultBox.innerHTML = `
                 <h2>Results</h2>
-
                 <p style="color:red; font-weight:bold;">
                     ⚠️ Value too high in:
                     <strong>${field}</strong>
@@ -98,15 +159,11 @@ function calculate() {
             return;
         }
 
-
         values[field] = val;
     }
 
 
-    /* =========================
-       CALCULATE CHEST POINTS
-    ========================= */
-
+    // Convert opened chests into Chest Points
     const totalPoints =
         values.common * 1 +
         values.rare * 2 +
@@ -115,32 +172,25 @@ function calculate() {
         values.mythic * 120;
 
 
-    /* =========================
-       CALCULATE COMPLETE CYCLES
-    ========================= */
-
+    // Complete 870-point cycles
     const mythicChests =
-        Math.floor(
-            totalPoints / CYCLE_POINTS
-        );
+        Math.floor(totalPoints / CYCLE_POINTS);
 
 
-    /* =========================
-       CALCULATE REMAINING POINTS
-    ========================= */
-
+    // Points left after complete cycles
     const remainingPoints =
         totalPoints % CYCLE_POINTS;
 
 
-    // Store current cycle result
     currentCycles = mythicChests;
 
 
-    /* =========================
-       UPDATE GLOBAL MYTHIC COUNTER
-    ========================= */
+    // Store the remaining points so Next Cycle
+    // can use them even when there are 0 complete cycles.
+    window.currentRemainingPoints = remainingPoints;
 
+
+    // Count complete cycles only once
     if (!cycleAlreadyCounted) {
 
         totalMythicChests += mythicChests;
@@ -148,10 +198,6 @@ function calculate() {
         cycleAlreadyCounted = true;
     }
 
-
-    /* =========================
-       SHOW CURRENT RESULTS
-    ========================= */
 
     resultBox.style.display = "block";
 
@@ -175,110 +221,95 @@ function calculate() {
     `;
 
 
-    /* =========================
-       UPDATE GLOBAL COUNTER
-    ========================= */
-
     document.getElementById("totalMythic").textContent =
         totalMythicChests;
 }
 
 
-/* =========================
-   NEXT CYCLE
-========================= */
-
 function nextCycle() {
 
-    if (currentCycles <= 0) {
+    const remainingPoints =
+        window.currentRemainingPoints || 0;
+
+
+    // Nothing can be obtained
+    if (currentCycles <= 0 && remainingPoints < 10) {
 
         alert(
-            "⚠️ There are no complete cycles to convert."
+            "⚠️ There are not enough Chest Points to obtain a reward."
         );
 
         return;
     }
 
 
-    /* =========================
-       CALCULATE REWARDS
-    ========================= */
-
-    const commonChests =
-        CYCLE_REWARDS.common *
-        currentCycles;
-
-    const rareChests =
-        CYCLE_REWARDS.rare *
-        currentCycles;
-
-    const epicChests =
-        CYCLE_REWARDS.epic *
-        currentCycles;
-
-    const legendaryChests =
-        CYCLE_REWARDS.legendary *
-        currentCycles;
-
-    const mythicChests =
-        CYCLE_REWARDS.mythic *
-        currentCycles;
+    // Rewards from complete cycles
+    let rewards = {
+        common: 0,
+        rare: 0,
+        epic: 0,
+        legendary: 0,
+        mythic: 0
+    };
 
 
-    /* =========================
-       UPDATE INPUTS
-    ========================= */
+    // Complete cycles give the entire reward sequence
+    for (let i = 0; i < currentCycles; i++) {
 
+        for (const reward of REWARD_SEQUENCE) {
+
+            rewards[reward.type]++;
+        }
+    }
+
+
+    // Add rewards obtainable from remaining points
+    let pointsLeft = remainingPoints;
+
+    for (const reward of REWARD_SEQUENCE) {
+
+        if (pointsLeft < reward.cost) {
+            break;
+        }
+
+        rewards[reward.type]++;
+        pointsLeft -= reward.cost;
+    }
+
+
+    // Put all rewards into the input fields
     document.getElementById("common").value =
-        commonChests;
+        rewards.common;
 
     document.getElementById("rare").value =
-        rareChests;
+        rewards.rare;
 
     document.getElementById("epic").value =
-        epicChests;
+        rewards.epic;
 
     document.getElementById("legendary").value =
-        legendaryChests;
+        rewards.legendary;
 
     document.getElementById("mythic").value =
-        mythicChests;
+        rewards.mythic;
 
 
-    /* =========================
-       PREPARE NEW CYCLE
-    ========================= */
-
+    // Reset current calculation
+    currentCycles = 0;
+    window.currentRemainingPoints = 0;
     cycleAlreadyCounted = false;
 
 
-    /* =========================
-       RESET CURRENT CYCLE
-    ========================= */
-
-    currentCycles = 0;
-
-
-    /* =========================
-       HIDE RESULTS
-    ========================= */
-
+    // Hide results
     document.getElementById("result").style.display =
         "none";
 
 
-    /* =========================
-       GLOBAL COUNTER STAYS VISIBLE
-    ========================= */
-
+    // Keep global counter visible
     document.getElementById("totalMythic").textContent =
         totalMythicChests;
 }
 
-
-/* =========================
-   THEME
-========================= */
 
 function applyTheme(theme) {
 
@@ -294,7 +325,6 @@ function applyTheme(theme) {
 
     const select =
         document.getElementById("themeSelect");
-
 
     if (select) {
         select.value = theme;
@@ -318,10 +348,6 @@ function changeTheme() {
 }
 
 
-/* =========================
-   LOAD SAVED THEME
-========================= */
-
 window.onload = function () {
 
     const savedTheme =
@@ -332,7 +358,6 @@ window.onload = function () {
     applyTheme(savedTheme);
 
 
-    // Make sure global counter starts at 0
     document.getElementById("totalMythic").textContent =
         totalMythicChests;
 };
