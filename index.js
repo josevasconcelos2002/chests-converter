@@ -1,60 +1,111 @@
-function getValue(id) {
-    const input = document.getElementById(id);
-    const value = input.value;
+const CYCLE_POINTS = 870;
 
-    // empty field → 0
-    if (value === "") return 0;
 
-    const num = Number(value);
+// Rewards obtained from 1 complete cycle
+const CYCLE_REWARDS = {
+    common: 0,
+    rare: 40,
+    epic: 12,
+    legendary: 3,
+    mythic: 1
+};
 
-    // invalid or negative → error
-    if (isNaN(num) || num < 0) {
-        return { error: true, field: id };
-    }
 
-    return num;
-}
+// Current cycle information
+let currentCycles = 0;
+
+
+// Global Mythic counter
+let totalMythicChests = 0;
+
+
+// Prevent counting the same calculation twice
+let cycleAlreadyCounted = false;
+
+
+/* =========================
+   CALCULATE
+========================= */
 
 function calculate() {
 
-    const fields = ["common", "rare", "epic", "legendary", "mythic"];
-    const resultBox = document.getElementById("result");
+    const fields = [
+        "common",
+        "rare",
+        "epic",
+        "legendary",
+        "mythic"
+    ];
+
+    const resultBox =
+        document.getElementById("result");
 
     const values = {};
 
+
+    /* =========================
+       VALIDATE INPUTS
+    ========================= */
+
     for (let field of fields) {
 
-        const input = document.getElementById(field);
-        const val = Number(input.value);
+        const input =
+            document.getElementById(field);
 
-        const max = Number(input.max);
+        const val =
+            Number(input.value);
 
-        // ❌ invalid / empty / negative
+        const max =
+            Number(input.max);
+
+
+        // ❌ Invalid / negative
         if (isNaN(val) || val < 0) {
+
             resultBox.style.display = "block";
+
             resultBox.innerHTML = `
+                <h2>Results</h2>
+
                 <p style="color:red; font-weight:bold;">
-                    ⚠️ Invalid input in: <strong>${field}</strong><br>
+                    ⚠️ Invalid input in:
+                    <strong>${field}</strong>
+                    <br>
                     🚫 Negative numbers are not allowed.
                 </p>
             `;
+
             return;
         }
 
-        // 🚫 exceeds HTML max
+
+        // 🚫 Exceeds maximum
         if (val > max) {
+
             resultBox.style.display = "block";
+
             resultBox.innerHTML = `
+                <h2>Results</h2>
+
                 <p style="color:red; font-weight:bold;">
-                    ⚠️ Value too high in: <strong>${field}</strong><br>
+                    ⚠️ Value too high in:
+                    <strong>${field}</strong>
+                    <br>
                     🚫 Maximum allowed is ${max}.
                 </p>
             `;
+
             return;
         }
 
+
         values[field] = val;
     }
+
+
+    /* =========================
+       CALCULATE CHEST POINTS
+    ========================= */
 
     const totalPoints =
         values.common * 1 +
@@ -63,41 +114,225 @@ function calculate() {
         values.legendary * 32 +
         values.mythic * 120;
 
-    const mythicChests = Math.floor(totalPoints / 870);
-    const remainingPoints = totalPoints % 870;
 
-    const pointsNeeded = remainingPoints === 0 ? 0 : 870 - remainingPoints;
+    /* =========================
+       CALCULATE COMPLETE CYCLES
+    ========================= */
+
+    const mythicChests =
+        Math.floor(
+            totalPoints / CYCLE_POINTS
+        );
+
+
+    /* =========================
+       CALCULATE REMAINING POINTS
+    ========================= */
+
+    const remainingPoints =
+        totalPoints % CYCLE_POINTS;
+
+
+    // Store current cycle result
+    currentCycles = mythicChests;
+
+
+    /* =========================
+       UPDATE GLOBAL MYTHIC COUNTER
+    ========================= */
+
+    if (!cycleAlreadyCounted) {
+
+        totalMythicChests += mythicChests;
+
+        cycleAlreadyCounted = true;
+    }
+
+
+    /* =========================
+       SHOW CURRENT RESULTS
+    ========================= */
 
     resultBox.style.display = "block";
+
     resultBox.innerHTML = `
-        <p>🎯 <strong>Total Chest Points:</strong> ${totalPoints}</p>
-        <p>🏆 <strong>Mythic Chests Earned:</strong> ${mythicChests}</p>
-        <p>📦 <strong>Remaining Points:</strong> ${remainingPoints}</p>
-        <p>⭐ <strong>Points Needed for Next Mythic:</strong> ${pointsNeeded}</p>
+        <h2>Results</h2>
+
+        <p>
+            🎯 <strong>Total Chest Points:</strong>
+            ${totalPoints}
+        </p>
+
+        <p>
+            🏆 <strong>Mythic Chests Earned:</strong>
+            ${mythicChests}
+        </p>
+
+        <p>
+            📦 <strong>Remaining Points:</strong>
+            ${remainingPoints}
+        </p>
     `;
+
+
+    /* =========================
+       UPDATE GLOBAL COUNTER
+    ========================= */
+
+    document.getElementById("totalMythic").textContent =
+        totalMythicChests;
 }
 
 
+/* =========================
+   NEXT CYCLE
+========================= */
+
+function nextCycle() {
+
+    if (currentCycles <= 0) {
+
+        alert(
+            "⚠️ There are no complete cycles to convert."
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       CALCULATE REWARDS
+    ========================= */
+
+    const commonChests =
+        CYCLE_REWARDS.common *
+        currentCycles;
+
+    const rareChests =
+        CYCLE_REWARDS.rare *
+        currentCycles;
+
+    const epicChests =
+        CYCLE_REWARDS.epic *
+        currentCycles;
+
+    const legendaryChests =
+        CYCLE_REWARDS.legendary *
+        currentCycles;
+
+    const mythicChests =
+        CYCLE_REWARDS.mythic *
+        currentCycles;
+
+
+    /* =========================
+       UPDATE INPUTS
+    ========================= */
+
+    document.getElementById("common").value =
+        commonChests;
+
+    document.getElementById("rare").value =
+        rareChests;
+
+    document.getElementById("epic").value =
+        epicChests;
+
+    document.getElementById("legendary").value =
+        legendaryChests;
+
+    document.getElementById("mythic").value =
+        mythicChests;
+
+
+    /* =========================
+       PREPARE NEW CYCLE
+    ========================= */
+
+    cycleAlreadyCounted = false;
+
+
+    /* =========================
+       RESET CURRENT CYCLE
+    ========================= */
+
+    currentCycles = 0;
+
+
+    /* =========================
+       HIDE RESULTS
+    ========================= */
+
+    document.getElementById("result").style.display =
+        "none";
+
+
+    /* =========================
+       GLOBAL COUNTER STAYS VISIBLE
+    ========================= */
+
+    document.getElementById("totalMythic").textContent =
+        totalMythicChests;
+}
+
+
+/* =========================
+   THEME
+========================= */
+
 function applyTheme(theme) {
+
     if (theme === "dark") {
+
         document.body.classList.add("dark");
+
     } else {
+
         document.body.classList.remove("dark");
     }
 
-    const select = document.getElementById("themeSelect");
-    select.value = theme;
+
+    const select =
+        document.getElementById("themeSelect");
+
+
+    if (select) {
+        select.value = theme;
+    }
 }
+
 
 function changeTheme() {
-    const theme = document.getElementById("themeSelect").value;
+
+    const theme =
+        document.getElementById("themeSelect").value;
+
 
     applyTheme(theme);
-    localStorage.setItem("theme", theme);
+
+
+    localStorage.setItem(
+        "theme",
+        theme
+    );
 }
 
-// carregar tema ao abrir página
+
+/* =========================
+   LOAD SAVED THEME
+========================= */
+
 window.onload = function () {
-    const savedTheme = localStorage.getItem("theme") || "light";
+
+    const savedTheme =
+        localStorage.getItem("theme") ||
+        "light";
+
+
     applyTheme(savedTheme);
+
+
+    // Make sure global counter starts at 0
+    document.getElementById("totalMythic").textContent =
+        totalMythicChests;
 };

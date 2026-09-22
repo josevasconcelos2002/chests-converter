@@ -4,25 +4,33 @@
     --text: #000000;
     --border: #ddd;
     --result: #eef7ee;
+    --total: #fff4cc;
 }
 
+
 /* 🌙 DARK MODE */
+
 body.dark {
     --bg: #121212;
     --card: #1e1e1e;
     --text: #ffffff;
     --border: #333;
     --result: #1f3a1f;
+    --total: #3a321f;
 }
 
+
 /* 🌐 BASE */
+
 * {
     box-sizing: border-box;
 }
 
+
 body {
     background: var(--bg);
     color: var(--text);
+
     transition: 0.3s ease;
 
     display: flex;
@@ -30,121 +38,205 @@ body {
     align-items: center;
 
     min-height: 100vh;
+
     margin: 0;
+
     font-family: Arial, sans-serif;
 }
 
+
 /* 📦 CONTAINER */
+
 .container {
     width: 100%;
     max-width: 700px;
+
     background: var(--card);
+
     padding: 25px;
+
     border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-/* 🏷️ TITULO */
+
+/* 🏷️ TITLE */
+
 h1 {
     text-align: center;
+
     margin-bottom: 30px;
 }
 
-/* 🎮 DROPDOWN THEME */
+
+/* 🎮 THEME DROPDOWN */
+
 #themeSelect {
     display: block;
+
     margin: 0 auto 20px auto;
 
     padding: 10px;
+
     border-radius: 8px;
+
     border: 1px solid var(--border);
 
     background: var(--card);
     color: var(--text);
 
     font-weight: bold;
+
     cursor: pointer;
 }
 
+
 /* 📦 CHEST ROW */
+
 .chest-row {
     display: flex;
+
     align-items: center;
+
     gap: 15px;
 
     margin-bottom: 20px;
+
     padding: 12px;
 
     border: 1px solid var(--border);
+
     border-radius: 10px;
 }
 
-/* 🖼️ IMAGENS */
+
+/* 🖼️ CHEST IMAGES */
+
 .chest-image {
     width: 70px;
     height: 70px;
+
     object-fit: contain;
 }
 
+
 /* 🧾 INPUT */
+
 .chest-input {
     flex: 1;
 }
 
+
 .chest-input label {
     display: block;
+
     margin-bottom: 6px;
+
     font-weight: bold;
 }
 
+
 .chest-input input {
     width: 100%;
+
     padding: 10px;
+
     font-size: 16px;
 
     border: 1px solid var(--border);
+
     border-radius: 6px;
 
     background: var(--card);
     color: var(--text);
 }
 
-/* 🔘 BOTÃO */
+
+/* 🔘 BUTTONS */
+
 button {
-    width: 100%;
-    padding: 14px;
-    font-size: 18px;
+    display: block;
+
+    width: 250px;
+
+    margin: 0 auto 15px auto;
+
+    padding: 12px 20px;
+
+    font-size: 17px;
 
     border: none;
+
     border-radius: 8px;
 
     cursor: pointer;
 
     background: #28a745;
+
     color: white;
+
     font-weight: bold;
 }
+
 
 button:hover {
     opacity: 0.9;
 }
 
-/* 📊 RESULTADOS */
+
+/* 📊 CURRENT RESULTS */
+
 .result {
     margin-top: 25px;
+
+    margin-bottom: 20px;
+
     padding: 20px;
 
     background: var(--result);
+
     border-radius: 10px;
 
     display: none;
 }
 
+
 .result h2 {
     margin-top: 0;
 }
 
+
 .result p {
     font-size: 18px;
+
     margin: 10px 0;
+}
+
+
+/* 🏆 TOTAL MYTHIC COUNTER */
+
+.total-mythic {
+    margin: 20px auto;
+
+    padding: 15px;
+
+    max-width: 500px;
+
+    text-align: center;
+
+    background: var(--total);
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    font-size: 18px;
+}
+
+
+#totalMythic {
+    font-size: 22px;
+
+    font-weight: bold;
 }

@@ -1,96 +1,202 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="./style.css">
-<script src="./index.js"></script>
-<title>ChestPoint Converter</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="./style.css">
+    <script src="./index.js"></script>
+
+    <title>ChestPoint Converter</title>
 </head>
+
 <body>
 
 <div class="container">
 
     <h1>ChestPoint Converter <br> Demon Soul Simulator</h1>
 
+
+    <!-- 🎮 Theme -->
     <select id="themeSelect" onchange="changeTheme()">
         <option value="light">☀️ Light Mode</option>
         <option value="dark">🌙 Dark Mode</option>
     </select>
 
+
+    <!-- 📦 Common Chest -->
     <div class="chest-row">
-        <img src="images/common.png" class="chest-image" alt="Common Chest">
+
+        <img
+            src="images/common.png"
+            class="chest-image"
+            alt="Common Chest"
+        >
 
         <div class="chest-input">
+
             <label>Common Chests Opened</label>
-            <input type="number" id="common" min="0" value="0" max="1000000">
+
+            <input
+                type="number"
+                id="common"
+                min="0"
+                value="0"
+                max="1000000"
+            >
+
         </div>
+
     </div>
 
+
+    <!-- 📦 Rare Chest -->
     <div class="chest-row">
-        <img src="images/rare.png" class="chest-image" alt="Rare Chest">
+
+        <img
+            src="images/rare.png"
+            class="chest-image"
+            alt="Rare Chest"
+        >
 
         <div class="chest-input">
+
             <label>Rare Chests Opened</label>
-            <input type="number" id="rare" min="0" value="0" max="1000000">
+
+            <input
+                type="number"
+                id="rare"
+                min="0"
+                value="0"
+                max="1000000"
+            >
+
         </div>
+
     </div>
 
+
+    <!-- 📦 Epic Chest -->
     <div class="chest-row">
-        <img src="images/epic.png" class="chest-image" alt="Epic Chest">
+
+        <img
+            src="images/epic.png"
+            class="chest-image"
+            alt="Epic Chest"
+        >
 
         <div class="chest-input">
+
             <label>Epic Chests Opened</label>
-            <input type="number" id="epic" min="0" value="0" max="1000000">
+
+            <input
+                type="number"
+                id="epic"
+                min="0"
+                value="0"
+                max="1000000"
+            >
+
         </div>
+
     </div>
 
+
+    <!-- 📦 Legendary Chest -->
     <div class="chest-row">
-        <img src="images/leg.png" class="chest-image" alt="Legendary Chest">
+
+        <img
+            src="images/leg.png"
+            class="chest-image"
+            alt="Legendary Chest"
+        >
 
         <div class="chest-input">
+
             <label>Legendary Chests Opened</label>
-            <input type="number" id="legendary" min="0" value="0" max="1000000">
+
+            <input
+                type="number"
+                id="legendary"
+                min="0"
+                value="0"
+                max="1000000"
+            >
+
         </div>
+
     </div>
 
+
+    <!-- 📦 Mythic Chest -->
     <div class="chest-row">
-        <img src="images/myth.png" class="chest-image" alt="Mythic Chest">
+
+        <img
+            src="images/myth.png"
+            class="chest-image"
+            alt="Mythic Chest"
+        >
 
         <div class="chest-input">
+
             <label>Mythic Chests Opened</label>
-            <input type="number" id="mythic" min="0" value="0" max="1000000">
+
+            <input
+                type="number"
+                id="mythic"
+                min="0"
+                value="0"
+                max="1000000"
+            >
+
         </div>
+
     </div>
 
+
+    <!-- 🔘 Calculate -->
     <button onclick="calculate()">
         Calculate Rewards
     </button>
 
+
+    <!-- 📊 Current Calculation Results -->
     <div class="result" id="result">
 
         <h2>Results</h2>
 
         <p>
-            🎯 Total Chest Points:
-            <strong id="totalPoints">0</strong>
+            🎯 <strong>Total Chest Points:</strong>
+            <span id="totalPoints">0</span>
         </p>
 
         <p>
-            🏆 Mythic Chests Earned:
-            <strong id="mythicChests">0</strong>
+            🏆 <strong>Mythic Chests Earned:</strong>
+            <span id="mythicChests">0</span>
         </p>
 
         <p>
-            📦 Remaining Points:
-            <strong id="remainingPoints">0</strong>
+            📦 <strong>Remaining Points:</strong>
+            <span id="remainingPoints">0</span>
         </p>
 
-        <p>
-            ⭐ Points Needed For Next Mythic:
-            <strong id="missingPoints">0</strong>
-        </p>
+    </div>
+
+
+
+
+
+    <!-- ➡️ Next Cycle -->
+    <button onclick="nextCycle()">
+        ➡️ Next Cycle
+    </button>
+
+        <!-- 🏆 Global Mythic Counter -->
+    <div class="total-mythic">
+
+        🏆 <strong>Total Mythic Chests Earned:</strong>
+
+        <span id="totalMythic">0</span>
 
     </div>
 
