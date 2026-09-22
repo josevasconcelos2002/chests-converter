@@ -63,10 +63,10 @@ function calculate() {
         values.legendary * 32 +
         values.mythic * 120;
 
-    const mythicChests = Math.floor(totalPoints / 800);
-    const remainingPoints = totalPoints % 800;
+    const mythicChests = Math.floor(totalPoints / 870);
+    const remainingPoints = totalPoints % 870;
 
-    const pointsNeeded = remainingPoints === 0 ? 0 : 800 - remainingPoints;
+    const pointsNeeded = remainingPoints === 0 ? 0 : 870 - remainingPoints;
 
     resultBox.style.display = "block";
     resultBox.innerHTML = `
